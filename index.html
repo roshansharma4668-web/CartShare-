@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CartShare - Collaborative Shopping Ecosystem</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-light">
+    <nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
+      <div class="container d-flex justify-content-between align-items-center">
+        <a
+          class="navbar-brand fw-bold d-flex align-items-center gap-2 m-0"
+          href="#"
+        >
+          <img
+            src="assets/cart-logo.svg"
+            alt="CartShare Logo"
+            width="28"
+            height="28"
+          />
+          <span>CartShare</span>
+        </a>
+        <div
+          id="room-badge-container"
+          class="d-none text-white d-flex align-items-center"
+        >
+          <span class="badge bg-light text-primary me-2" id="user-display"
+            >User: -</span
+          >
+          <span class="badge bg-warning text-dark me-2" id="room-display"
+            >Room: -</span
+          >
+          <button id="leave-room-btn" class="btn btn-sm btn-outline-light">
+            Leave Room
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mb-5">
+      <div id="auth-section" class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="card shadow-sm border-0">
+            <div class="card-body p-4 text-center">
+              <img
+                src="assets/cart-logo.svg"
+                alt="Cart Logo"
+                class="p-2 bg-primary rounded-circle mb-3"
+                width="50"
+                height="50"
+              />
+              <h4 class="card-title fw-bold mb-1">Welcome to CartShare</h4>
+              <p class="text-muted small mb-4">
+                Enter your username and room code to start collaborative
+                shopping.
+              </p>
+
+              <form id="join-form" class="text-start">
+                <div class="mb-3">
+                  <label for="username" class="form-label fw-semibold"
+                    >Your Name (Username)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    placeholder="e.g. Roshan"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="room-id" class="form-label fw-semibold"
+                    >Room Code</label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control text-uppercase"
+                      id="room-id"
+                      placeholder="e.g. FLAT101"
+                      required
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      id="random-room-btn"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100 py-2 fw-semibold"
+                >
+                  Join Room
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboard-section" class="d-none">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="fw-semibold">Free Delivery Target: ₹500</span>
+              <span class="fw-bold" id="threshold-status">₹0 / ₹500</span>
+            </div>
+            <div class="progress" style="height: 12px">
+              <div
+                id="progress-bar"
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: 0%"
+              ></div>
+            </div>
+            <small id="threshold-msg" class="text-muted mt-1 d-block"
+              >Add items worth ₹500 to unlock free shipping.</small
+            >
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <!-- Add Item Form -->
+            <div class="card shadow-sm border-0 mb-4">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Add Item to Shared Cart</h5>
+                <form id="add-item-form" class="row g-2">
+                  <div class="col-md-5">
+                    <input
+                      type="text"
+                      id="item-name"
+                      class="form-control"
+                      placeholder="Item name (e.g. Milk, Bread)"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <input
+                      type="number"
+                      id="item-price"
+                      class="form-control"
+                      placeholder="Price (₹)"
+                      min="1"
+                      step="0.5"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <input
+                      type="number"
+                      id="item-qty"
+                      class="form-control"
+                      placeholder="Qty"
+                      min="1"
+                      value="1"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100">
+                      + Add
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <h5 class="card-title mb-0">Shared Cart Items</h5>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  id="print-receipt-btn"
+                  type="button"
+                >
+                  🖨️️ Print Receipt
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table align-middle table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Item</th>
+                      <th>Price</th>
+                      <th>Qty</th>
+                      <th>Total</th>
+                      <th>Added By</th>
+                      <th class="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cart-items-body"></tbody>
+                </table>
+              </div>
+
+              <div id="empty-cart-msg" class="text-center py-5 text-muted">
+                <img
+                  src="assets/empty-cart.svg"
+                  alt="Empty Cart"
+                  class="mb-3 opacity-75"
+                  width="80"
+                />
+                <p class="mb-1 fw-semibold">Your shared cart is empty!</p>
+                <small>Use the form above to add your first item.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card shadow-sm border-0 mb-4">
+              <div class="card-header bg-white py-3">
+                <h5 class="card-title mb-0">Order Summary</h5>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="text-muted">Total Items:</span>
+                  <span class="fw-semibold" id="total-qty">0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="text-muted">Subtotal:</span>
+                  <span class="fw-semibold" id="subtotal-amount">₹0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span class="text-muted">Delivery Fee:</span>
+                  <span
+                    class="text-success fw-semibold"
+                    id="delivery-fee-display"
+                    >₹50.00</span
+                  >
+                </div>
+                <hr />
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <span class="h5 mb-0">Grand Total:</span>
+                  <span class="h4 text-primary mb-0" id="grand-total-amount"
+                    >₹0.00</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-white py-3">
+                <h5 class="card-title mb-0">Activity Log</h5>
+              </div>
+              <div class="card-body p-0">
+                <ul
+                  class="list-group list-group-flush small"
+                  id="activity-log-list"
+                  style="max-height: 250px; overflow-y: auto"
+                ></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="printable-receipt" class="receipt-hidden">
+        <div class="p-4 border rounded bg-white">
+          <h2 class="text-center mb-1">CartShare - Expense Receipt</h2>
+          <p class="text-center text-muted mb-4" id="receipt-date"></p>
+          <div class="d-flex justify-content-between mb-3">
+            <strong>Room Code: <span id="receipt-room"></span></strong>
+            <strong>Generated By: <span id="receipt-user"></span></strong>
+          </div>
+          <table class="table table-bordered mb-4">
+            <thead class="table-light">
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Rate (₹)</th>
+                <th>Total (₹)</th>
+                <th>Purchased For</th>
+              </tr>
+            </thead>
+            <tbody id="receipt-items-body"></tbody>
+          </table>
+          <div class="text-end">
+            <p class="mb-1">
+              <strong>Subtotal:</strong> <span id="receipt-subtotal"></span>
+            </p>
+            <p class="mb-2">
+              <strong>Delivery Fee:</strong> <span id="receipt-delivery"></span>
+            </p>
+            <h4>
+              <strong>Grand Total:</strong>
+              <span id="receipt-grand-total" class="text-primary"></span>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

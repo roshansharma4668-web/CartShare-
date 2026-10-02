@@ -1,0 +1,36 @@
+
+.receipt-hidden {
+  display: none !important;
+}
+
+#activity-log-list {
+  scrollbar-width: thin;
+}
+
+.card {
+  border-radius: 8px;
+}
+
+@media print {
+
+  nav,
+  #auth-section,
+  #dashboard-section,
+  .btn,
+  .progress {
+    display: none !important;
+  }
+
+  #printable-receipt,
+  .receipt-hidden {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 10px !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+  }
+}
